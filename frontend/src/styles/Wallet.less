@@ -1,0 +1,77 @@
+// Define your color variables
+@primary-color: #007bff; // Bootstrap's primary color (blue)
+@dark-bg: #343a40; // Dark background color
+@text-color: #ffffff; // White text color
+@success-color: #28a745; // Success button color
+@danger-color: #dc3545; // Danger button color
+
+// Define styles for specific elements
+.card {
+    background-color: @dark-bg;
+    color: @text-color;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+}
+
+.card-header {
+    background-color: @primary-color;
+    color: @text-color;
+}
+
+.card-title {
+    background-color: @primary-color;
+    color: @text-color;
+    padding: 1rem;
+    margin-bottom: 0;
+}
+
+.form-control {
+    background-color: @dark-bg;
+    color: @text-color;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.25rem;
+
+    &:focus {
+        border-color: @primary-color;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+}
+
+.btn {
+    &.btn-success {
+        background-color: @success-color;
+        border-color: @success-color;
+
+        &:hover {
+            background-color: darken(@success-color, 10%);
+            border-color: darken(@success-color, 10%);
+        }
+    }
+
+    &.btn-danger {
+        background-color: @danger-color;
+        border-color: @danger-color;
+
+        &:hover {
+            background-color: darken(@danger-color, 10%);
+            border-color: darken(@danger-color, 10%);
+        }
+    }
+
+    &.btn-primary {
+        background-color: @primary-color;
+        border-color: @primary-color;
+
+        &:hover {
+            background-color: darken(@primary-color, 10%);
+            border-color: darken(@primary-color, 10%);
+        }
+    }
+}

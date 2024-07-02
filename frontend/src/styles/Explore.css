@@ -1,0 +1,293 @@
+.explore {
+.exploreContainer {
+  min-height: 100vh;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; 
+}
+
+.searchFilterContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchBar {
+  background-color: #222;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.searchBar input[type="text"] {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  color: white;
+  margin-right: 0.5rem;
+}
+
+.searchBar input[type="text"]::placeholder {
+  color: #999;
+}
+
+.searchIcon {
+  font-size: 20px;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.filterButtonsContainer {
+  min-width: auto;
+  min-height: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.filterButton, 
+.dropdown-toggle {
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.filterButton:hover,
+.dropdown-toggle:hover {
+  background-color: #333;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  background-color: #222;
+  border: none;
+  border-radius: 8px;
+  min-width: 100%;
+}
+
+.dropdown-item {
+  color: white;
+  padding: 0.5rem 1rem;
+}
+
+.dropdown-item:hover {
+  background-color: #333;
+}
+
+.nftCard {
+  margin: 10px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.1rem;
+  background-color: transparent;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nftCard:hover {
+  transform: translateY(-10px);
+}
+
+.nftImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+.nftCard:hover .nftImage {
+  transform: scale(1.05);
+  filter: brightness(0.8);
+}
+
+.nftInfo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 15px;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.nftDetails1{
+  margin: 0;
+}
+
+.nftDetails2{
+  margin: 0 1rem 0 1rem;
+}
+
+.nftCard:hover .nftInfo {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nftTitle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+}
+
+.nftAuthor{
+  font-size: 0.9rem;
+  font-weight: lighter;
+  color:#bebdbd;
+  margin-bottom: 0.2rem;
+}
+
+.nftLTP {
+  font-size: 1.2rem;
+  font-weight: bold;
+  /* margin-bottom: 0.2rem; */
+}
+
+.nftPrice {
+  font-size: 1.2rem;
+  font-weight: lighter;
+  margin-bottom: 1.2rem;
+}
+
+.nftDate {
+  font-size: 0.8rem;
+  color: #ccc;
+  margin-bottom: 1rem;
+}
+
+.likeContainer {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.heartIcon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+  color: #dc3545;
+}
+
+.likeCount {
+  font-size: 1.2rem;
+}
+
+.buyButton {
+  background-color: #0d6efd;
+  font-weight:600;
+  border: none;
+  border-radius: 1.2rem;
+  padding: 0.4rem;
+  font-size: 0.8rem;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buyButton:hover {
+  background-color: #0b51ba;
+}
+}
+
+@media (max-width: 992px) {
+  .hero {
+    padding: 3rem 0;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+  }
+
+  .exploreButton,
+  .createButton {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+  }
+
+  .nftImage {
+    width: auto;
+    height: auto;
+  }
+  .nftTitle {
+    font-size: 0.5rem;
+    font-weight: bold;
+    margin-bottom: 0.1rem;
+  }
+  
+  .nftPrice, .nftLTP {
+    font-size: 0.45rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .nftDate {
+    font-size: 0.4rem;
+    color: #ccc;
+    margin-bottom: 0.5rem;
+  }
+  
+  .heartIcon {
+    font-size: 0.6rem;
+    margin-right: 0.25rem;
+    color: #dc3545;
+  }
+  
+  .likeCount {
+    font-size: 0.45rem;
+  }
+  
+  .buyButton {
+    border: none;
+    border-radius: 5px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.5rem;
+  }
+  
+
+.likeCount {
+  font-size: 0.9rem;
+  margin-left: 0.3rem;
+}
+}
+
+@media (max-width: 992px) {
+  .searchFilterContainer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .searchBar, .dropdown {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .nftCard {
+    width: calc(50% - 20px); 
+  }
+}
+
+@media (max-width: 576px) {
+  .nftCard {
+    width: 100%
+  }
+}

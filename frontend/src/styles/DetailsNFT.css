@@ -1,0 +1,160 @@
+.detailsNFTContainer {
+  display: flex;
+  background-color: #adabab8e;
+  color: white;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #dfd7d7;
+  border-radius: 10px;
+  min-height: 90vh;
+
+.nftImage {
+  width: 25rem; 
+  height: auto;
+  object-fit: contain; 
+  margin-right: 50px;
+  margin-left: 50px;
+  border-radius: 10px; 
+}
+
+.detailsContent {
+  margin: 20px;
+  display: flex;
+  flex-direction: column; 
+  gap: 2rem;
+}
+
+.nftInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.nftDetails1{
+  margin: 0 1rem;
+}
+
+.nftDetails2{
+  margin: 0 1rem 0 1rem;
+}
+
+.nftTitle, .nftLTP {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+}
+
+.nftAuthor, .nftPrice{
+  font-size: 1.5rem;
+  font-weight: lighter;
+  color:#bebdbd;
+  margin-bottom: 0.2rem;
+  padding-left:0.5rem;
+}
+
+.nftDate {
+  font-size: 1.5rem;
+  color: #ccc;
+  margin-bottom: 1rem;
+  padding-left:0.5rem;
+}
+
+.likeContainer {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  padding-left:0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.heartIcon {
+  padding-left:0.5rem;
+  margin-bottom: 0.7rem;
+  font-size: 2rem;
+  color: #dc3545;
+  align-items: center;
+
+}
+
+.likeCount {
+  font-size: 1.5rem;
+  color: #ccc;
+  margin-bottom: 1rem;
+  padding-left:0.5rem;
+}
+
+
+.nftDescription {
+  margin: 0 1rem 0 1rem;
+}
+
+.nftDescription h3 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  padding-left:0.5rem;
+}
+
+.nftDescription p {
+  padding-left:0.6rem;
+  line-height: 1.6; 
+}
+
+.buyButton {
+  margin-left: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.buyButton:hover {
+  background-color: #0056b3;
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.errorContainer h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.errorContainer p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 1rem;
+  text-decoration: none;
+}
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+  
+    .image {
+      max-width: 70%; 
+    }
+  
+    .details {
+      max-width: 100%;
+    }
+  }
+}

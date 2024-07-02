@@ -1,0 +1,137 @@
+@background-color: #1a1a1a;
+@text-color: #ffffff;
+@button-primary-bg: #007bff;
+@button-primary-border: #0056b3;
+@button-secondary-bg: #6c757d;
+@button-secondary-border: #565e64;
+@modal-header-footer-bg: #2a2a2a;
+@input-border: #555;
+@input-bg-light: #2a2a2a;
+@text-color-muted: rgba(255, 255, 255, 0.6); // Màu trắng nhạt
+
+.modal-content {
+    background-color: @background-color;
+    color: @text-color;
+    border-radius: 10px;
+}
+
+.modal-header,
+.modal-footer {
+    border: none;
+    background-color: @modal-header-footer-bg;
+    justify-content: center;
+    position: relative;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 20px;
+    color: @text-color;
+    margin: 0 auto;
+}
+
+.modal-body {
+    text-align: center;
+    font-size: 16px;
+    color: @text-color;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: @text-color;
+}
+
+.form-control {
+    padding: 10px;
+    font-size: 14px;
+    background-color: @input-bg-light;
+    color: @text-color;
+    border: 1px solid @input-border;
+}
+
+.form-control:focus {
+    background-color: @input-bg-light;
+    color: @text-color;
+    border-color: @button-primary-border;
+    box-shadow: none;
+}
+
+.form-text {
+    color: @text-color-muted;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    background-color: @modal-header-footer-bg;
+}
+
+.btn-primary {
+    background-color: @button-primary-bg;
+    border-color: @button-primary-border;
+}
+
+.btn-secondary {
+    background-color: @button-secondary-bg;
+    border-color: @button-secondary-border;
+}
+
+.btn-close {
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    color: @text-color;
+    background: none;
+    border: none;
+}
+
+/* src/styles/BuyLTP.css */
+.custom-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    border-top: none;
+}
+
+.custom-close-button {
+    margin-right: 0;
+}
+
+.exchange-rate {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.custom-text {
+    color: #fdfdfd;
+    /* Chọn màu chữ bạn muốn */
+}
+
+input::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+    /* For WebKit browsers (Chrome, Safari, etc.) */
+}
+
+input:-moz-placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+    /* For Firefox 18- */
+}
+
+input::-moz-placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+    /* For Firefox 19+ */
+}
+
+input:-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+    /* For Internet Explorer 10+ */
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+    /* Standard syntax */
+}

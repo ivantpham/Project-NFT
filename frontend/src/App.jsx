@@ -7,6 +7,7 @@ function App() {
     <WalletProvider>
       <Header />
       <Outlet />
+
     </WalletProvider>
   )
 }

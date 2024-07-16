@@ -1,107 +1,109 @@
 .detailsNFTContainer {
-  display: flex;
   background-color: #adabab8e;
   color: white;
-  margin: 20px;
   padding: 20px;
   border: 1px solid #dfd7d7;
   border-radius: 10px;
-  min-height: 90vh;
+}
 
 .nftImage {
-  width: 25rem; 
+  width: 100%;
   height: auto;
-  object-fit: contain; 
-  margin-right: 50px;
-  margin-left: 50px;
-  border-radius: 10px; 
+  object-fit: contain;
+  border-radius: 10px;
 }
 
 .detailsContent {
-  margin: 20px;
   display: flex;
-  flex-direction: column; 
-  gap: 2rem;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .nftInfo {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.nftDetails1{
-  margin: 0 1rem;
-}
-
-.nftDetails2{
-  margin: 0 1rem 0 1rem;
-}
-
-.nftTitle, .nftLTP {
-  font-size: 3.5rem;
+.nftTitle,
+.nftLTP {
+  font-size: 2.5rem;
   font-weight: bold;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.5rem;
 }
 
-.nftAuthor, .nftPrice{
+.nftAuthor,
+.nftPrice {
   font-size: 1.5rem;
   font-weight: lighter;
-  color:#bebdbd;
+  color: #bebdbd;
   margin-bottom: 0.2rem;
-  padding-left:0.5rem;
 }
 
-.nftDate {
+.nftOwner {
   font-size: 1.5rem;
-  color: #ccc;
-  margin-bottom: 1rem;
-  padding-left:0.5rem;
+  color: #bebdbd;
+  margin-bottom: 0.2rem;
+}
+
+.ownerHistory {
+  margin-top: 1rem;
+}
+
+.ownerHistory ul {
+  list-style-type: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.ownerHistory li {
+  font-size: 1.5rem;
+  color: #bebdbd;
+  margin-bottom: 0.2rem;
 }
 
 .likeContainer {
   font-size: 1.5rem;
-  margin-bottom: 1rem;
-  padding-left:0.5rem;
   display: flex;
   align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  padding: 10px;
+  border-top: 1px solid #dfd7d7;
 }
 
 .heartIcon {
-  padding-left:0.5rem;
-  margin-bottom: 0.7rem;
+  margin-right: 0.5rem;
   font-size: 2rem;
   color: #dc3545;
-  align-items: center;
-
 }
 
 .likeCount {
   font-size: 1.5rem;
   color: #ccc;
-  margin-bottom: 1rem;
-  padding-left:0.5rem;
 }
 
+.likeButton {
+  margin-left: auto;
+}
 
 .nftDescription {
-  margin: 0 1rem 0 1rem;
+  margin: 0 1rem;
 }
 
 .nftDescription h3 {
   font-size: 2rem;
   font-weight: 600;
-  margin-bottom: 0.2rem;
-  padding-left:0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .nftDescription p {
-  padding-left:0.6rem;
-  line-height: 1.6; 
+  line-height: 1.6;
 }
 
 .buyButton {
-  margin-left: 20px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -121,6 +123,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   min-height: 100vh;
 }
 
@@ -143,18 +146,23 @@
   border-radius: 1rem;
   text-decoration: none;
 }
-  
-  @media (max-width: 768px) {
-    .container {
-      padding: 1rem;
-    }
-  
-    .image {
-      max-width: 70%; 
-    }
-  
-    .details {
-      max-width: 100%;
-    }
+
+@media (max-width: 768px) {
+  .detailsNFTContainer {
+    padding: 1rem;
+  }
+
+  .nftImage {
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .detailsContent {
+    max-width: 100%;
+  }
+
+  .nftInfo {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

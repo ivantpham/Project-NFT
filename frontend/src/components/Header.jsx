@@ -1,4 +1,3 @@
-// components/Header.jsx
 import { useState, useEffect, useContext } from 'react';
 import { Button, Container, Nav, NavDropdown, Navbar } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
@@ -63,19 +62,21 @@ function Header() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav>
-                        <Nav.Link as={NavLink} to="/" exact activeClassName="active">Home</Nav.Link>
+                        <Nav.Link as={NavLink} to="/" activeClassName="active">Home</Nav.Link>
                         <Nav.Link as={NavLink} to="/explore" activeClassName="active">Explore</Nav.Link>
-                        {
-                            isConnected ? (
-                                <Nav.Link as={NavLink} to="/wallet">
-                                    <Button variant="light">{formatWalletAddress(walletAddress)}</Button>
-                                </Nav.Link>
-                            ) : (
-                                <Button variant="light" disabled={isConnecting} onClick={handleConnectWallet}>
-                                    {isConnecting ? 'Connecting...' : 'Connect Wallet'}
-                                </Button>
-                            )
-                        }
+                        <Nav.Link as={NavLink} to="/mint-nft" activeClassName="active">Create</Nav.Link>
+                        {isConnected && (
+                            <Nav.Link as={NavLink} to="/mynft" activeClassName="active">My NFT</Nav.Link>
+                        )}
+                        {isConnected ? (
+                            <Nav.Link as={NavLink} to="/wallet">
+                                <Button variant="light">{formatWalletAddress(walletAddress)}</Button>
+                            </Nav.Link>
+                        ) : (
+                            <Button variant="light" disabled={isConnecting} onClick={handleConnectWallet}>
+                                {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+                            </Button>
+                        )}
                         <NavDropdown
                             title={<PersonCircle />}
                             id="basic-nav-dropdown"

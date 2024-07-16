@@ -1,9 +1,12 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import mockdata from '../utils/MockData';
+import { ethers } from 'ethers';
 import { Container, Row, Col, Form, Dropdown, Button } from 'react-bootstrap';
 import { Search, Heart } from 'react-bootstrap-icons';
-import '../styles/Explore.css';
 import { Link } from 'react-router-dom';
+import '../styles/Explore.css';
+import newNFT from '../contract-api/newNFT.json';
+import addressContract from '../contract-api/addressContract';
+
 
 const Explore = () => {
   const [nfts, setNfts] = useState([]);
@@ -12,10 +15,55 @@ const Explore = () => {
   const [selectedFileType, setSelectedFileType] = useState('');
   const [selectedPriceRange, setSelectedPriceRange] = useState('');
   const [hoveredNFT, setHoveredNFT] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const initContract = useCallback(async () => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(addressContract, newNFT.abi, signer);
+
+      const allTokenIds = await contract.getAllTokenIds();
+      const nftDetails = await Promise.all(
+        allTokenIds.map(async (tokenId) => {
+          try {
+            const [name, description, creator, ownerHex, price, likesHex, imageUrl] = await contract.getNFTInfo(tokenId);
+            const owner = ethers.utils.getAddress(ownerHex);
+            const likes = parseInt(likesHex._hex);
+
+            return { tokenId, name, description, creator, owner, price, likes, imageUrl };
+          } catch (error) {
+            console.error(`Error fetching details for tokenId ${tokenId}:`, error);
+            return { tokenId, name: 'N/A', description: 'N/A', creator: 'N/A', owner: 'N/A', price: ethers.BigNumber.from(0), likes: 0, imageUrl: '' };
+          }
+        })
+      );
+
+      const filteredNfts = nftDetails.filter(nft => nft.creator !== '0x0000000000000000000000000000000000000000');
+      setNfts(filteredNfts);
+    } catch (error) {
+      console.error('Error fetching NFTs:', error);
+      setError('An error occurred while fetching NFTs. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    setNfts(mockdata);
-  }, []);
+    if (window.ethereum) {
+      initContract();
+    } else {
+      console.warn('MetaMask not detected');
+      setError('MetaMask not detected. Please install MetaMask and refresh the page.');
+      setLoading(false);
+    }
+  }, [initContract]);
+
+  const formatAddress = (address) => {
+    if (!address) return '';
+    return `${address.slice(0, 7)}...${address.slice(-5)}`;
+  };
 
   const categories = useMemo(() => [...new Set(nfts.map(nft => nft.category))], [nfts]);
   const filetypes = useMemo(() => [...new Set(nfts.map(nft => nft.filetype))], [nfts]);
@@ -103,7 +151,7 @@ const Explore = () => {
                   <Dropdown.Item onClick={() => setSelectedPriceRange('')}>All Prices</Dropdown.Item>
                   {priceRanges.map(priceRange => (
                     <Dropdown.Item key={priceRange} onClick={() => setSelectedPriceRange(priceRange)}>
-                      {priceRange} ETH
+                      {priceRange} LTP
                     </Dropdown.Item>
                   ))}
                 </Dropdown.Menu>
@@ -112,7 +160,9 @@ const Explore = () => {
           </Row>
 
           <Row>
-            {filteredNFTs.map((nft, index) => (
+            {loading && <p>Loading NFTs...</p>}
+            {error && <p className="text-danger">{error}</p>}
+            {!loading && !error && filteredNFTs.map((nft, index) => (
               <Col key={nft.tokenId} xs={12} sm={6} md={3} className={`g-4 ${index >= 4 ? 'mt-4' : ''}`}>
                 <Link to={`/details-nft/${nft.tokenId}`} className="nftCardLink">
                   <div
@@ -120,26 +170,25 @@ const Explore = () => {
                     onMouseEnter={() => handleMouseEnter(nft.tokenId)}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <img src={nft.image} alt={nft.name} className="nftImage" />
+                    <img src={nft.imageUrl} alt={nft.name} className="nftImage" />
                     {hoveredNFT === nft.tokenId && (
-                    <div className="nftInfo">
-                    <div className="nftDetails1">
-                      <p className="nftTitle">{nft.name}</p>
-                      <p className="nftAuthor">Author: {nft.creator}</p>
-                      <p className="nftDate">{nft.date}</p>
-                      <Button className="buyButton" onClick={() => handleBuyNow(nft)}>
-                        Buy now
-                      </Button>
-                    </div>
-                    <div className="nftDetails2">
-                      <p className="nftLTP">{nft.LTP} LTP</p>
-                      <p className="nftPrice">{nft.price} USD</p>
-                      <div className="likeContainer">
-                        <Heart className="heartIcon" />
-                        <span className="likeCount">{nft.likes}</span>
+                      <div className="nftInfo">
+                        <div className="nftDetails1">
+                          <p className="nftTitle">{nft.name}</p>
+                          <p className="nftAuthor">Creator: {formatAddress(nft.creator)}</p>
+                          <p className="nftAuthor">Owner: {formatAddress(nft.owner)}</p>
+                          <Button className="buyButton" onClick={() => handleBuyNow(nft)}>
+                            Buy now
+                          </Button>
+                        </div>
+                        <div className="nftDetails2">
+                          <p className="nftPrice">{ethers.utils.formatEther(nft.price)} LTP</p>
+                          <div className="likeContainer">
+                            <Heart className="heartIcon" />
+                            <span className="likeCount">{nft.likes}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    </div>
                     )}
                   </div>
                 </Link>

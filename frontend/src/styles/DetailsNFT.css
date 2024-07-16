@@ -166,3 +166,21 @@
     align-items: flex-start;
   }
 }
+
+.likeContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.likeButton {
+  margin-left: 10px;
+  /* Khoảng cách giữa Heart và nút Like */
+}
+
+.backButton {
+  margin-top: 20px;
+  /* Khoảng cách nút Back với các nút mua hoặc chỉnh sửa */
+  background-color: #ccc !important;
+  /* Màu nền xám cho nút Back */
+}

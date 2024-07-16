@@ -1,2 +1,2 @@
-const addressContract = "0xd409672BB7F0c78c6886384867382b8828f3c53f";
-export default addressContract;
+const addressContractNFT = "0xF45C6BE787e97298aF8E0e1726f975910CCBB75f";
+export default addressContractNFT;

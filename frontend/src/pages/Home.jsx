@@ -5,7 +5,7 @@ import { Search, Heart } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import '../styles/Home.css';
 import newNFT from '../contract-api/newNFT.json';
-import addressContract from '../contract-api/addressContract';
+import addressContractNFT from '../contract-api/addressContract';
 
 const Home = () => {
   const [nfts, setNfts] = useState([]);
@@ -21,7 +21,7 @@ const Home = () => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      const contract = new ethers.Contract(addressContract, newNFT.abi, signer);
+      const contract = new ethers.Contract(addressContractNFT, newNFT.abi, signer);
 
       const allTokenIds = await contract.getAllTokenIds();
       const nftDetails = await Promise.all(

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button, Container, Form, Image, Modal } from "react-bootstrap";
 import { ethers } from "ethers";
 import { storage, ref, uploadBytesResumable, getDownloadURL, collection, addDoc, db, doc, getDoc } from "./firebase"; // Import Firebase functions for storage and Firestore
-import addressContract from '../contract-api/addressContract';
+import addressContractNFT from '../contract-api/addressContractNFT';
 import newNFT from "../contract-api/newNFT.json";
 
 export default function MintNFT() {
@@ -13,7 +13,7 @@ export default function MintNFT() {
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("In Creating ....!");
 
-    const contractAddress = addressContract;
+    const contractAddress = addressContractNFT;
     const abi = newNFT.abi;
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);

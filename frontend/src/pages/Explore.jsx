@@ -5,7 +5,7 @@ import { Search, Heart } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import '../styles/Explore.css';
 import newNFT from '../contract-api/newNFT.json';
-import addressContractNFT from '../contract-api/addressContract';
+import addressContractNFT from '../contract-api/addressContractNFT';
 
 
 const Explore = () => {

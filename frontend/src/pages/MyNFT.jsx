@@ -5,7 +5,7 @@ import { Heart } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { WalletContext } from '../context/WalletContext';
 import newNFT from '../contract-api/newNFT.json'; // Adjust path if necessary
-import addressContract from '../contract-api/addressContract'; // Adjust path if necessary
+import addressContractNFT from '../contract-api/addressContractNFT'; // Adjust path if necessary
 import '../styles/MyNFT.css';
 
 const MyNFT = () => {
@@ -28,7 +28,7 @@ const MyNFT = () => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      const contract = new ethers.Contract(addressContract, newNFT.abi, signer);
+      const contract = new ethers.Contract(addressContractNFT, newNFT.abi, signer);
 
       const allTokenIds = await contract.getAllTokenIds();
       const nftDetails = await Promise.all(
@@ -101,7 +101,7 @@ const MyNFT = () => {
       setDeleteInProgress(true);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      const contract = new ethers.Contract(addressContract, newNFT.abi, signer);
+      const contract = new ethers.Contract(addressContractNFT, newNFT.abi, signer);
 
       await contract.deleteNFT(deleteNFTId);
 

@@ -5,7 +5,7 @@ import newNFT from '../contract-api/newNFT.json';
 import LTPCoin from '../contract-api/LTPCoin.json';
 import { Heart } from 'react-bootstrap-icons';
 import { Button, Container, Row, Col, Card, Modal, Form } from 'react-bootstrap';
-import '../styles/DetailsNFT.css';
+import '../styles/DetailsNFT.css'; // Importing Less file for styling
 import addressContractNFT from '../contract-api/addressContractNFT';
 import addressContractLTPCoin from '../contract-api/addressContractLTPCoin';
 
@@ -226,15 +226,17 @@ const DetailsNFT = () => {
               <h3>Description</h3>
               <p>{nft.description}</p>
             </div>
-            <Row className="mt-3 justify-content-between">
+            <Row className="mt-3 justify-content-center">
               {userAddress && userAddress === nft.owner && (
-                <Col md={4} className="text-center">
-                  <Button onClick={handleEditNFT} variant="primary" className="btn-block">Edit NFT</Button>
+                <Col md={4} className="editNFTButton">
+                  <Button onClick={handleEditNFT} variant="primary">Edit NFT</Button>
                 </Col>
               )}
-              <Col md={4} className="text-center">
-                <Button onClick={handleBuyNow} variant="success" className="btn-block">Buy Now</Button>
-              </Col>
+              {userAddress && userAddress !== nft.owner && (
+                <Col md={4} className="text-center">
+                  <Button onClick={handleBuyNow} variant="success" className="btn-block">Buy Now</Button>
+                </Col>
+              )}
             </Row>
           </div>
         </Col>

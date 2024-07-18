@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { ethers } from 'ethers';
-import { Container, Row, Col, Form, Dropdown, Button, Alert } from 'react-bootstrap'; // Import Alert from react-bootstrap
-import { Search, Heart } from 'react-bootstrap-icons';
+import { Container, Row, Col, Button, Alert } from 'react-bootstrap'; // Import Alert from react-bootstrap
+import { Heart } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import '../styles/Home.css';
 import newNFT from '../contract-api/newNFT.json';
@@ -101,17 +101,18 @@ const Home = () => {
   }, []);
 
   const handleCreateClick = () => {
-    const email = localStorage.getItem('email');
-    if (!email) {
+    const realAddress = localStorage.getItem('realAddress');
+    if (!realAddress) {
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 3000); // Hide alert after 3 seconds
     } else {
-      window.location.href = '/mint-nft'; // Redirect to mint-nft page if email exists
+      window.location.href = '/mint-nft'; // Redirect to mint-nft page if realAddress exists
     }
   };
 
   return (
     <Container className="home-container">
+      {showAlert && <Alert variant="danger">Please log in and connect your MetaMask wallet.</Alert>}
       <div className="homeContainer">
         <div className="hero">
           <p className="ltp">LTP</p>
@@ -124,8 +125,6 @@ const Home = () => {
             <Button variant="outline-light" className="createButton" onClick={handleCreateClick}>Create</Button>
           </div>
         </div>
-
-        {showAlert && <Alert variant="danger">"You are not logged in, please sign in."</Alert>}
 
         <h3 className="whatsNew">What is new?</h3>
         <Row className="g-4">

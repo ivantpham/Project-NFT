@@ -193,6 +193,10 @@ const DetailsNFT = () => {
     );
   }
 
+  // Trước hàm return của DetailsNFT
+  const realAddress = localStorage.getItem('realAddress');
+  const email = localStorage.getItem('email');
+
   return (
     <Container className="detailsNFTContainer mt-5">
       <Row className="align-items-center">
@@ -219,7 +223,9 @@ const DetailsNFT = () => {
               <div className="likeContainer">
                 <Heart className="heartIcon" />
                 <span className="likeCount">{nft.likes}</span>
-                <Button onClick={() => handleLikeNFT()} className="likeButton">Like this NFT</Button>
+                {realAddress && (
+                  <Button onClick={() => handleLikeNFT()} className="likeButton">Like this NFT</Button>
+                )}
               </div>
             </div>
             <div className="nftDescription">
@@ -227,14 +233,14 @@ const DetailsNFT = () => {
               <p>{nft.description}</p>
             </div>
             <Row className="mt-3 justify-content-center">
-              {userAddress && userAddress === nft.owner && (
+              {realAddress && userAddress && userAddress === nft.owner && (
                 <Col md={4} className="editNFTButton">
                   <Button onClick={handleEditNFT} variant="primary">Edit NFT</Button>
                 </Col>
               )}
-              {userAddress && userAddress !== nft.owner && (
-                <Col md={4} className="text-center">
-                  <Button onClick={handleBuyNow} variant="success" className="btn-block">Buy Now</Button>
+              {realAddress && userAddress && userAddress !== nft.owner && (
+                <Col md={4} className="buyNFTButton">
+                  <Button onClick={handleBuyNow} variant="success">Buy Now</Button>
                 </Col>
               )}
             </Row>
@@ -242,65 +248,38 @@ const DetailsNFT = () => {
         </Col>
       </Row>
 
-      {/* In Progress Modal */}
-      <Modal show={showInProgressModal} onHide={() => setShowInProgressModal(false)} backdrop="static" keyboard={false} centered>
-        <Modal.Body>
-          <h4 className="text-center">In Progress...</h4>
-          <p className="text-center">Your transaction is being processed.</p>
-          <div className="loader" />
+      {/* In-progress modal */}
+      <Modal show={showInProgressModal} onHide={() => setShowInProgressModal(false)} centered>
+        <Modal.Body className="text-center">
+          <h4>Transaction in Progress</h4>
+          <p>Please wait while the transaction is being processed...</p>
         </Modal.Body>
       </Modal>
 
-      {/* Edit Modal */}
+      {/* Edit modal */}
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Edit NFT</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <EditNFTForm initialData={nft} onSaveChanges={handleSaveChanges} onCancel={() => setShowEditModal(false)} />
+          <Form onSubmit={handleSaveChanges}>
+            <Form.Group className="mb-3">
+              <Form.Label>Name</Form.Label>
+              <Form.Control type="text" name="name" defaultValue={nft.name} required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control as="textarea" name="description" defaultValue={nft.description} rows={3} required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Price (LTP)</Form.Label>
+              <Form.Control type="text" name="price" defaultValue={nft.price} required />
+            </Form.Group>
+            <Button variant="primary" type="submit">Save Changes</Button>
+          </Form>
         </Modal.Body>
       </Modal>
     </Container>
-  );
-};
-
-const EditNFTForm = ({ initialData, onSaveChanges, onCancel }) => {
-  const [formData, setFormData] = useState({
-    name: initialData.name,
-    description: initialData.description,
-    price: initialData.price
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSaveChanges(formData);
-  };
-
-  return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="name">
-        <Form.Label>NFT Name</Form.Label>
-        <Form.Control type="text" name="name" value={formData.name} onChange={handleChange} required />
-      </Form.Group>
-      <Form.Group controlId="description">
-        <Form.Label>Description</Form.Label>
-        <Form.Control as="textarea" rows={3} name="description" value={formData.description} onChange={handleChange} required />
-      </Form.Group>
-      <Form.Group controlId="price">
-        <Form.Label>Price (LTP)</Form.Label>
-        <Form.Control type="text" name="price" value={formData.price} onChange={handleChange} required />
-      </Form.Group>
-      <Button variant="primary" type="submit">Save Changes</Button>{' '}
-      <Button variant="secondary" onClick={onCancel}>Cancel</Button>
-    </Form>
   );
 };
 

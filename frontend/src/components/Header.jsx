@@ -28,8 +28,32 @@ function Header() {
             return;
         }
 
+        // Check if addressCheck exists in localStorage
+        const addressCheck = localStorage.getItem('addressCheck');
+        if (!addressCheck) {
+            alert('Update wallet address for the account or log in again.');
+            setIsConnecting(false);
+            return;
+        }
+
         try {
             await connectWallet();
+
+            // After connecting wallet, check and update realAddress if addressCheck matches walletAddress
+            const walletAddress = localStorage.getItem('walletAddress');
+            if (addressCheck === walletAddress) {
+                localStorage.setItem('realAddress', walletAddress);
+            } else {
+                // If addressCheck does not match walletAddress, alert user and wait for dismissal
+                alert('Wallet MetaMask does not match the account. Please dismiss this alert to sign out.');
+                await new Promise(resolve => {
+                    // Wait for alert to be dismissed
+                    setTimeout(resolve, 2000); // Wait for 2 seconds
+                });
+                await handleSignOut(); // Now perform sign out
+                return;
+            }
+
         } catch (error) {
             console.error('Error connecting wallet:', error);
         } finally {
@@ -47,6 +71,12 @@ function Header() {
             await disconnectWallet();
             localStorage.removeItem('walletAddress');
             localStorage.removeItem('addressCheck');
+            localStorage.removeItem('realAddress');
+
+            // Wait for 2 seconds before reloading the page
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000); // Wait for 2 seconds
         } catch (error) {
             console.error('Error disconnecting Google or wallet:', error);
         }
@@ -61,12 +91,12 @@ function Header() {
         if (window.ethereum && window.ethereum.isMetaMask) {
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-                console.log('Danh sách tài khoản MetaMask:', accounts);
+                console.log('MetaMask accounts:', accounts);
             } catch (error) {
-                console.error('Lỗi khi truy vấn tài khoản MetaMask:', error);
+                console.error('Error querying MetaMask accounts:', error);
             }
         } else {
-            console.error('MetaMask không được phát hiện trong trình duyệt của bạn.');
+            console.error('MetaMask not detected in your browser.');
         }
     };
 

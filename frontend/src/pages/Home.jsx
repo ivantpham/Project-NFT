@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { ethers } from 'ethers';
-import { Container, Row, Col, Form, Dropdown, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Dropdown, Button, Alert } from 'react-bootstrap'; // Import Alert from react-bootstrap
 import { Search, Heart } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import '../styles/Home.css';
@@ -16,6 +16,7 @@ const Home = () => {
   const [hoveredNFT, setHoveredNFT] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAlert, setShowAlert] = useState(false); // State for alert visibility
 
   const initContract = useCallback(async () => {
     try {
@@ -99,6 +100,16 @@ const Home = () => {
     console.log(`Buying NFT: ${nft.name}`);
   }, []);
 
+  const handleCreateClick = () => {
+    const email = localStorage.getItem('email');
+    if (!email) {
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 3000); // Hide alert after 3 seconds
+    } else {
+      window.location.href = '/mint-nft'; // Redirect to mint-nft page if email exists
+    }
+  };
+
   return (
     <Container className="home-container">
       <div className="homeContainer">
@@ -110,11 +121,11 @@ const Home = () => {
             <Link to="/explore">
               <Button variant="primary" className="exploreButton">Explore</Button>
             </Link>
-            <Link to="/mint-nft">
-              <Button variant="outline-light" className="createButton">Create</Button>
-            </Link>
+            <Button variant="outline-light" className="createButton" onClick={handleCreateClick}>Create</Button>
           </div>
         </div>
+
+        {showAlert && <Alert variant="danger">"You are not logged in, please sign in."</Alert>}
 
         <h3 className="whatsNew">What is new?</h3>
         <Row className="g-4">

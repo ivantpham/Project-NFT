@@ -1,5 +1,4 @@
-// context/WalletContext.js
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 
 export const WalletContext = createContext();
@@ -7,31 +6,44 @@ export const WalletContext = createContext();
 export const WalletProvider = ({ children }) => {
     const [walletAddress, setWalletAddress] = useState('');
     const [isConnected, setIsConnected] = useState(false);
+    const [isConnecting, setIsConnecting] = useState(false);
 
     const connectWallet = async () => {
+        setIsConnecting(true);
         if (window.ethereum) {
             try {
+                // Yêu cầu quyền truy cập vào tài khoản Ethereum
+                await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
+
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 await provider.send('eth_requestAccounts', []);
                 const signer = provider.getSigner();
                 const address = await signer.getAddress();
                 setWalletAddress(address);
                 setIsConnected(true);
+
+                // Lưu địa chỉ ví vào localStorage
+                localStorage.setItem('walletAddress', address);
             } catch (error) {
                 console.error('Error connecting wallet:', error);
+            } finally {
+                setIsConnecting(false);
             }
         } else {
             console.error('MetaMask is not installed');
+            setIsConnecting(false);
         }
     };
 
     const disconnectWallet = async () => {
         if (window.ethereum && window.ethereum.isMetaMask) {
             try {
-                await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
+                // Ngắt kết nối ví MetaMask ngay lập tức
+                await window.ethereum.request({ method: 'wallet_disconnect' });
+
                 setWalletAddress('');
                 setIsConnected(false);
-                // Additional handling if needed after disconnecting
+                // Xử lý bổ sung nếu cần sau khi ngắt kết nối
             } catch (error) {
                 console.error('Error disconnecting wallet:', error);
             }
@@ -40,8 +52,17 @@ export const WalletProvider = ({ children }) => {
         }
     };
 
+    useEffect(() => {
+        // Kiểm tra và cập nhật địa chỉ ví từ localStorage khi component mount
+        const storedAddress = localStorage.getItem('walletAddress');
+        if (storedAddress) {
+            setWalletAddress(storedAddress);
+            setIsConnected(true);
+        }
+    }, []);
+
     return (
-        <WalletContext.Provider value={{ walletAddress, isConnected, connectWallet, disconnectWallet }}>
+        <WalletContext.Provider value={{ walletAddress, isConnected, isConnecting, connectWallet, disconnectWallet }}>
             {children}
         </WalletContext.Provider>
     );

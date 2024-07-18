@@ -1,0 +1,7 @@
+.modal-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100% - 3.5rem);
+  /* Đảm bảo modal không quá cao khi nội dung không đủ */
+}

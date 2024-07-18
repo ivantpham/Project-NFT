@@ -51,15 +51,15 @@ const router = createBrowserRouter([
       {
         path: "wallet",
         element: <Wallet />
-      }
-    ]
-  },
-  {
-    path: "/auth",
-    children: [
+      },
       {
-        path: "signin",
-        element: <Signin />,
+        path: "/auth",
+        children: [
+          {
+            path: "signin",
+            element: <Signin />,
+          }
+        ]
       }
     ]
   }

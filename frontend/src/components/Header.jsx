@@ -7,7 +7,7 @@ import { auth, db, getDocs, collection, query, where } from '../pages/firebase';
 import { signOut } from 'firebase/auth'; // Import the signOut function
 
 function Header() {
-    const { walletAddress, isConnected, connectWallet, disconnectWallet } = useContext(WalletContext);
+    const { walletAddress, isConnected, connectWallet, disconnectWallet, callWinner } = useContext(WalletContext);
     const [isConnecting, setIsConnecting] = useState(false);
     const [isGoogleConnected, setIsGoogleConnected] = useState(false);
     const [profileImageUrl, setProfileImageUrl] = useState(null);

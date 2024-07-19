@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button, Container, Form, Image, Modal } from "react-bootstrap";
 import { ethers } from "ethers";
 import { storage, ref, uploadBytesResumable, getDownloadURL, collection, addDoc, db, doc, getDoc } from "./firebase"; // Import Firebase functions for storage and Firestore
@@ -42,7 +42,7 @@ export default function MintNFT() {
                     const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
                     const docRef = await addDoc(collection(db, "nfts"), {
                         tokenId: tokenId,
-                        imageUrl: downloadURL,
+                        imageUrl: downloadURL
                     });
 
                     const docSnap = await getDoc(doc(db, "nfts", docRef.id));

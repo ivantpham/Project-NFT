@@ -12,6 +12,8 @@ contract MyNFT is ERC721URIStorage, ReentrancyGuard {
 
     address public contractCreator;
 
+    string private WINNER = "Winner";
+
     struct NFTInfo {
         string name;
         string description;
@@ -23,6 +25,7 @@ contract MyNFT is ERC721URIStorage, ReentrancyGuard {
         address[] ownerHistory;
         bool auction; // Add auction field to NFTInfo
         uint256 auctionEndTime; // Add auction end time field
+        address auctionWinner;
     }
 
     mapping(uint256 => NFTInfo) private _nftInfo;
@@ -82,7 +85,8 @@ contract MyNFT is ERC721URIStorage, ReentrancyGuard {
             imageURL: _imageURL,
             ownerHistory: ownerHistory,
             auction: false, // Default auction status to false
-            auctionEndTime: 0 // Default auction end time to 0
+            auctionEndTime: 0, // Default auction end time to 0
+            auctionWinner: msg.sender
         });
 
         _creatorNFTs[msg.sender].push(tokenId);
@@ -239,6 +243,16 @@ contract MyNFT is ERC721URIStorage, ReentrancyGuard {
         ); // Emit event for auction status update
     }
 
+    function bidding(uint256 tokenId, uint256 amount) public {
+        require(_tokenIdExists(tokenId), "NFT does not exist");
+        require(_nftInfo[tokenId].auction == true, "NFT is not bidding");
+        require(_nftInfo[tokenId].auctionEndTime > block.timestamp, "Auction is endded");
+        require(_nftInfo[tokenId].price < amount, "Bidding amount must larger than the current price");
+
+        _nftInfo[tokenId].price = amount;
+        _nftInfo[tokenId].auctionWinner = msg.sender;
+    }
+
     function checkAndUpdateAuction(uint256 tokenId) external {
         require(_tokenIdExists(tokenId), "NFT does not exist");
 
@@ -250,6 +264,19 @@ contract MyNFT is ERC721URIStorage, ReentrancyGuard {
 
             emit AuctionEnded(tokenId, false); // Emit event for auction end
         }
+    }
+
+    function getWinner(uint256 tokenId) public returns (bool, address) {
+        if (_nftInfo[tokenId].owner == _nftInfo[tokenId].auctionWinner
+        || block.timestamp < _nftInfo[tokenId].auctionEndTime) {
+            return (false, _nftInfo[tokenId].auctionWinner);
+        }
+        if (block.timestamp >= _nftInfo[tokenId].auctionEndTime && _nftInfo[tokenId].auction == true) {
+            _nftInfo[tokenId].auction = false;
+            emit AuctionEnded(tokenId, false);
+
+        }
+        return (true, _nftInfo[tokenId].auctionWinner);
     }
 
     function _tokenIdExists(uint256 tokenId) internal view returns (bool) {

@@ -7,7 +7,6 @@ import '../styles/Explore.css';
 import newNFT from '../contract-api/newNFT.json';
 import addressContractNFT from '../contract-api/addressContractNFT';
 
-
 const Explore = () => {
   const [nfts, setNfts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,6 +14,7 @@ const Explore = () => {
   const [selectedFileType, setSelectedFileType] = useState('');
   const [selectedPriceRange, setSelectedPriceRange] = useState('');
   const [hoveredNFT, setHoveredNFT] = useState(null);
+  const [hoveredNFTDetails, setHoveredNFTDetails] = useState(null); // New state for hovered NFT details
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -28,14 +28,14 @@ const Explore = () => {
       const nftDetails = await Promise.all(
         allTokenIds.map(async (tokenId) => {
           try {
-            const [name, description, creator, ownerHex, price, likesHex, imageUrl] = await contract.getNFTInfo(tokenId);
+            const [name, description, creator, ownerHex, price, likesHex, imageUrl, historyOwner, isAuction] = await contract.getNFTInfo(tokenId);
             const owner = ethers.utils.getAddress(ownerHex);
             const likes = parseInt(likesHex._hex);
 
-            return { tokenId, name, description, creator, owner, price, likes, imageUrl };
+            return { tokenId, name, description, creator, owner, price, likes, imageUrl, historyOwner, isAuction };
           } catch (error) {
             console.error(`Error fetching details for tokenId ${tokenId}:`, error);
-            return { tokenId, name: 'N/A', description: 'N/A', creator: 'N/A', owner: 'N/A', price: ethers.BigNumber.from(0), likes: 0, imageUrl: '' };
+            return { tokenId, name: 'N/A', description: 'N/A', creator: 'N/A', owner: 'N/A', price: ethers.BigNumber.from(0), likes: 0, imageUrl: '', historyOwner: [], isAuction: false };
           }
         })
       );
@@ -88,12 +88,23 @@ const Explore = () => {
     });
   }, [nfts, searchTerm, selectedCategory, selectedFileType, selectedPriceRange]);
 
-  const handleMouseEnter = useCallback((tokenId) => {
+  const handleMouseEnter = useCallback(async (tokenId) => {
     setHoveredNFT(tokenId);
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(addressContractNFT, newNFT.abi, signer);
+      const [, , , , , , , , isAuction] = await contract.getNFTInfo(tokenId);
+      setHoveredNFTDetails({ tokenId, isAuction });
+    } catch (error) {
+      console.error(`Error fetching details for tokenId ${tokenId}:`, error);
+      setHoveredNFTDetails(null);
+    }
   }, []);
 
   const handleMouseLeave = useCallback(() => {
     setHoveredNFT(null);
+    setHoveredNFTDetails(null);
   }, []);
 
   const handleBuyNow = useCallback((nft) => {
@@ -164,7 +175,10 @@ const Explore = () => {
             {error && <p className="text-danger">{error}</p>}
             {!loading && !error && filteredNFTs.map((nft, index) => (
               <Col key={nft.tokenId} xs={12} sm={6} md={3} className={`g-4 ${index >= 4 ? 'mt-4' : ''}`}>
-                <Link to={`/details-nft/${nft.tokenId}`} className="nftCardLink">
+                <Link
+                  to={nft.isAuction ? `/auction/english/${nft.tokenId}` : `/details-nft/${nft.tokenId}`}
+                  className="nftCardLink"
+                >
                   <div
                     className={`nftCard ${hoveredNFT === nft.tokenId ? 'hovered' : ''}`}
                     onMouseEnter={() => handleMouseEnter(nft.tokenId)}
@@ -178,7 +192,7 @@ const Explore = () => {
                           <p className="nftAuthor">Creator: {formatAddress(nft.creator)}</p>
                           <p className="nftAuthor">Owner: {formatAddress(nft.owner)}</p>
                           <Button className="buyButton" onClick={() => handleBuyNow(nft)}>
-                            Buy now
+                            {nft.isAuction ? 'Bidding now' : 'Buy now'}
                           </Button>
                         </div>
                         <div className="nftDetails2">

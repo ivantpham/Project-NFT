@@ -12,6 +12,7 @@ import Explore from './pages/Explore.jsx';
 import DetailsNFT from './pages/DetailsNFT.jsx';
 import Wallet from './pages/Wallet.jsx';
 import MyNFT from './pages/MyNFT.jsx';
+import EnglishAuction from './pages/EnglishAuction.jsx';
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,15 @@ const router = createBrowserRouter([
           {
             path: "signin",
             element: <Signin />,
+          }
+        ]
+      },
+      {
+        path: "/auction",
+        children: [
+          {
+            path: "english/:nftId",
+            element: <EnglishAuction />,
           }
         ]
       }

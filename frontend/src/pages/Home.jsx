@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { ethers } from 'ethers';
-import { Container, Row, Col, Button, Alert } from 'react-bootstrap'; // Import Alert from react-bootstrap
+import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import { Heart } from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import '../styles/Home.css';
 import newNFT from '../contract-api/newNFT.json';
 import addressContractNFT from '../contract-api/addressContractNFT';
@@ -18,6 +18,8 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [showAlert, setShowAlert] = useState(false); // State for alert visibility
 
+  const navigate = useNavigate(); // Hook to programmatically navigate
+
   const initContract = useCallback(async () => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -28,14 +30,15 @@ const Home = () => {
       const nftDetails = await Promise.all(
         allTokenIds.map(async (tokenId) => {
           try {
-            const [name, description, creator, ownerHex, price, likesHex, imageUrl] = await contract.getNFTInfo(tokenId);
+            // Update here to match your request
+            const [name, description, creator, ownerHex, price, likesHex, imageUrl, historyOwner, isAuction] = await contract.getNFTInfo(tokenId);
             const owner = ethers.utils.getAddress(ownerHex);
             const likes = parseInt(likesHex._hex);
 
-            return { tokenId, name, description, creator, owner, price, likes, imageUrl };
+            return { tokenId, name, description, creator, owner, price, likes, imageUrl, historyOwner, isAuction };
           } catch (error) {
             console.error(`Error fetching details for tokenId ${tokenId}:`, error);
-            return { tokenId, name: 'N/A', description: 'N/A', creator: 'N/A', owner: 'N/A', price: ethers.BigNumber.from(0), likes: 0, imageUrl: '' };
+            return { tokenId, name: 'N/A', description: 'N/A', creator: 'N/A', owner: 'N/A', price: ethers.BigNumber.from(0), likes: 0, imageUrl: '', historyOwner: [], isAuction: false };
           }
         })
       );
@@ -110,6 +113,33 @@ const Home = () => {
     }
   };
 
+  const handleNFTClick = async (nft) => {
+    try {
+      console.log(`Fetching NFT info for tokenId ${nft.tokenId}`);
+
+      // Fetch the NFT info from the smart contract
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(addressContractNFT, newNFT.abi, signer);
+
+      // Update here to match your request
+      const [name, description, creator, ownerHex, price, likesHex, imageUrl, historyOwner, isAuction] = await contract.getNFTInfo(nft.tokenId);
+      const owner = ethers.utils.getAddress(ownerHex);
+      const likes = parseInt(likesHex._hex);
+
+      console.log(`NFT Auction Status for tokenId ${nft.tokenId}: ${isAuction}`);
+
+      // Navigate to the appropriate page based on auction status
+      if (isAuction) {
+        navigate(`/auction/english/${nft.tokenId}`);
+      } else {
+        navigate(`/details-nft/${nft.tokenId}`);
+      }
+    } catch (error) {
+      console.error(`Error handling NFT click for tokenId ${nft.tokenId}:`, error);
+    }
+  };
+
   return (
     <Container className="home-container">
       {showAlert && <Alert variant="danger">Please log in and connect your MetaMask wallet.</Alert>}
@@ -132,34 +162,33 @@ const Home = () => {
           {error && <p className="text-danger">{error}</p>}
           {!loading && !error && filteredNFTs.map((nft, index) => (
             <Col key={nft.tokenId} xs={12} sm={6} md={3} className={`g-4 ${index >= 4 ? 'mt-4' : ''}`}>
-              <Link to={`/details-nft/${nft.tokenId}`} className="nftCardLink">
-                <div
-                  className={`nftCard ${hoveredNFT === nft.tokenId ? 'hovered' : ''}`}
-                  onMouseEnter={() => handleMouseEnter(nft.tokenId)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <img src={nft.imageUrl} alt={nft.name} className="nftImage" />
-                  {hoveredNFT === nft.tokenId && (
-                    <div className="nftInfo">
-                      <div className="nftDetails1">
-                        <p className="nftTitle">{nft.name}</p>
-                        <p className="nftAuthor">Creator: {formatAddress(nft.creator)}</p>
-                        <p className="nftAuthor">Owner: {formatAddress(nft.owner)}</p>
-                        <Button className="buyButton" onClick={() => handleBuyNow(nft)}>
-                          Buy now
-                        </Button>
-                      </div>
-                      <div className="nftDetails2">
-                        <p className="nftPrice">{ethers.utils.formatEther(nft.price)} LTP</p>
-                        <div className="likeContainer">
-                          <Heart className="heartIcon" />
-                          <span className="likeCount">{nft.likes}</span>
-                        </div>
+              <div
+                className={`nftCard ${hoveredNFT === nft.tokenId ? 'hovered' : ''}`}
+                onMouseEnter={() => handleMouseEnter(nft.tokenId)}
+                onMouseLeave={handleMouseLeave}
+                onClick={() => handleNFTClick(nft)} // Handle click event
+              >
+                <img src={nft.imageUrl} alt={nft.name} className="nftImage" />
+                {hoveredNFT === nft.tokenId && (
+                  <div className="nftInfo">
+                    <div className="nftDetails1">
+                      <p className="nftTitle">{nft.name}</p>
+                      <p className="nftAuthor">Creator: {formatAddress(nft.creator)}</p>
+                      <p className="nftAuthor">Owner: {formatAddress(nft.owner)}</p>
+                      <Button className="buyButton" onClick={() => handleBuyNow(nft)}>
+                        {nft.isAuction ? 'Bidding now' : 'Buy now'}
+                      </Button>
+                    </div>
+                    <div className="nftDetails2">
+                      <p className="nftPrice">{ethers.utils.formatEther(nft.price)} LTP</p>
+                      <div className="likeContainer">
+                        <Heart className="heartIcon" />
+                        <span className="likeCount">{nft.likes}</span>
                       </div>
                     </div>
-                  )}
-                </div>
-              </Link>
+                  </div>
+                )}
+              </div>
             </Col>
           ))}
         </Row>

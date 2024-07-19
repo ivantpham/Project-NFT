@@ -1,9 +1,12 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
+import addressContractNFT from '../contract-api/addressContractNFT'
+import newNFT from '../contract-api/newNFT.json';
 
 export const WalletContext = createContext();
 
 export const WalletProvider = ({ children }) => {
+    const contractAddress = addressContractNFT
     const [walletAddress, setWalletAddress] = useState('');
     const [isConnected, setIsConnected] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
@@ -35,6 +38,21 @@ export const WalletProvider = ({ children }) => {
         }
     };
 
+    const [winner, setWinner] = useState('')
+    const callWinner = useCallback((tokenId) => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        if (signer) {
+            const contract = new ethers.Contract(contractAddress, newNFT.abi, signer)
+
+            setInterval(async () => {
+                const winner = await contract.getWinner(tokenId);
+                if (winner[0] > 0) setWinner(winner)
+            }
+                , 1000)
+        }
+    }, [])
+
     const disconnectWallet = async () => {
         if (window.ethereum && window.ethereum.isMetaMask) {
             try {
@@ -62,7 +80,7 @@ export const WalletProvider = ({ children }) => {
     }, []);
 
     return (
-        <WalletContext.Provider value={{ walletAddress, isConnected, isConnecting, connectWallet, disconnectWallet }}>
+        <WalletContext.Provider value={{ walletAddress, isConnected, isConnecting, connectWallet, disconnectWallet, winner, callWinner }}>
             {children}
         </WalletContext.Provider>
     );

@@ -35,7 +35,7 @@ const Explore = () => {
             return { tokenId, name, description, creator, owner, price, likes, imageUrl, historyOwner, isAuction };
           } catch (error) {
             console.error(`Error fetching details for tokenId ${tokenId}:`, error);
-            return { tokenId, name: 'N/A', description: 'N/A', creator: 'N/A', owner: 'N/A', price: ethers.BigNumber.from(0), likes: 0, imageUrl: '', historyOwner: [], isAuction: false };
+            return { tokenId, name: 'N/A', description: 'N/A', creator: 'N/A', owner: 'N/A', price: parseInt(price.toString()), likes: 0, imageUrl: '', historyOwner: [], isAuction: false };
           }
         })
       );

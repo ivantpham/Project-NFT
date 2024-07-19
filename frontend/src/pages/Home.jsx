@@ -46,8 +46,9 @@ const Home = () => {
       const filteredNfts = nftDetails.filter(nft => nft.creator !== '0x0000000000000000000000000000000000000000');
       setNfts(filteredNfts);
     } catch (error) {
+      setShowAlert(true);
       console.error('Error fetching NFTs:', error);
-      setError('An error occurred while fetching NFTs. Please try again.');
+      //setError('An error occurred while fetching NFTs. Please try again.');
     } finally {
       setLoading(false);
     }

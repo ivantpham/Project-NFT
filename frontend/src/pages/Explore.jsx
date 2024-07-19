@@ -31,8 +31,8 @@ const Explore = () => {
             const [name, description, creator, ownerHex, price, likesHex, imageUrl, historyOwner, isAuction] = await contract.getNFTInfo(tokenId);
             const owner = ethers.utils.getAddress(ownerHex);
             const likes = parseInt(likesHex._hex);
-
-            return { tokenId, name, description, creator, owner, price, likes, imageUrl, historyOwner, isAuction };
+            const priceInLTP = parseInt(price._hex) / 1e18
+            return { tokenId, name, description, creator, owner, price: priceInLTP, likes, imageUrl, historyOwner, isAuction };
           } catch (error) {
             console.error(`Error fetching details for tokenId ${tokenId}:`, error);
             return { tokenId, name: 'N/A', description: 'N/A', creator: 'N/A', owner: 'N/A', price: parseInt(price.toString()), likes: 0, imageUrl: '', historyOwner: [], isAuction: false };
@@ -196,7 +196,7 @@ const Explore = () => {
                           </Button>
                         </div>
                         <div className="nftDetails2">
-                          <p className="nftPrice">{ethers.utils.formatEther(nft.price)} LTP</p>
+                          <p className="nftPrice">{nft.price} LTP</p>
                           <div className="likeContainer">
                             <Heart className="heartIcon" />
                             <span className="likeCount">{nft.likes}</span>

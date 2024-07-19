@@ -157,41 +157,43 @@ const Home = () => {
         </div>
 
         <h3 className="whatsNew">What is new?</h3>
-        <Row className="g-4">
-          {loading && <p>Loading NFTs...</p>}
-          {error && <p className="text-danger">{error}</p>}
-          {!loading && !error && filteredNFTs.map((nft, index) => (
-            <Col key={nft.tokenId} xs={12} sm={6} md={3} className={`g-4 ${index >= 4 ? 'mt-4' : ''}`}>
-              <div
-                className={`nftCard ${hoveredNFT === nft.tokenId ? 'hovered' : ''}`}
-                onMouseEnter={() => handleMouseEnter(nft.tokenId)}
-                onMouseLeave={handleMouseLeave}
-                onClick={() => handleNFTClick(nft)} // Handle click event
-              >
-                <img src={nft.imageUrl} alt={nft.name} className="nftImage" />
-                {hoveredNFT === nft.tokenId && (
-                  <div className="nftInfo">
-                    <div className="nftDetails1">
-                      <p className="nftTitle">{nft.name}</p>
-                      <p className="nftAuthor">Creator: {formatAddress(nft.creator)}</p>
-                      <p className="nftAuthor">Owner: {formatAddress(nft.owner)}</p>
-                      <Button className="buyButton" onClick={() => handleBuyNow(nft)}>
-                        {nft.isAuction ? 'Bidding now' : 'Buy now'}
-                      </Button>
-                    </div>
-                    <div className="nftDetails2">
-                      <p className="nftPrice">{ethers.utils.formatEther(nft.price)} LTP</p>
-                      <div className="likeContainer">
-                        <Heart className="heartIcon" />
-                        <span className="likeCount">{nft.likes}</span>
+        {!showAlert &&
+          <Row className="g-4">
+            {loading && <p>Loading NFTs...</p>}
+            {error && <p className="text-danger">{error}</p>}
+            {!loading && !error && filteredNFTs.map((nft, index) => (
+              <Col key={nft.tokenId} xs={12} sm={6} md={3} className={`g-4 ${index >= 4 ? 'mt-4' : ''}`}>
+                <div
+                  className={`nftCard ${hoveredNFT === nft.tokenId ? 'hovered' : ''}`}
+                  onMouseEnter={() => handleMouseEnter(nft.tokenId)}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleNFTClick(nft)} // Handle click event
+                >
+                  <img src={nft.imageUrl} alt={nft.name} className="nftImage" />
+                  {hoveredNFT === nft.tokenId && (
+                    <div className="nftInfo">
+                      <div className="nftDetails1">
+                        <p className="nftTitle">{nft.name}</p>
+                        <p className="nftAuthor">Creator: {formatAddress(nft.creator)}</p>
+                        <p className="nftAuthor">Owner: {formatAddress(nft.owner)}</p>
+                        <Button className="buyButton" onClick={() => handleBuyNow(nft)}>
+                          {nft.isAuction ? 'Bidding now' : 'Buy now'}
+                        </Button>
+                      </div>
+                      <div className="nftDetails2">
+                        <p className="nftPrice">{ethers.utils.formatEther(nft.price)} LTP</p>
+                        <div className="likeContainer">
+                          <Heart className="heartIcon" />
+                          <span className="likeCount">{nft.likes}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            </Col>
-          ))}
-        </Row>
+                  )}
+                </div>
+              </Col>
+            ))}
+          </Row>
+        }
       </div>
     </Container>
   );
